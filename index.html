@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fictional Universe QA</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #fff);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 40px 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 700px;
+      margin: 60px auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #1e3a5f;
+      margin-bottom: 30px;
+    }
+
+    label {
+      font-weight: bold;
+      color: #333;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .answer-box {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f0f9ff;
+      border-left: 5px solid #007bff;
+      border-radius: 8px;
+      display: none;
+      transition: all 0.3s ease;
+    }
+
+    .spinner {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .spinner div {
+      width: 20px;
+      height: 20px;
+      background: #007bff;
+      border-radius: 50%;
+      display: inline-block;
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+
+    .spinner div:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+
+    .spinner div:nth-child(3) {
+      animation-delay: -0.32s;
+    }
+
+    @keyframes bounce {
+      0%, 80%, 100% {
+        transform: scale(0);
+      } 
+      40% {
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔮 Fictional Universe QA</h1>
+    <form id="qa-form">
+      <label for="question">Ask a question about Harry Potter lore:</label>
+      <input
+        type="text"
+        id="question"
+        name="question"
+        placeholder="e.g. What are Horcruxes and why did Voldemort make them?"
+        required
+      />
+      <button type="submit">Ask</button>
+    </form>
+
+    <div class="spinner" id="spinner">
+      <div></div><div></div><div></div>
+    </div>
+
+    <div class="answer-box" id="answer-box">
+      <h3>Answer:</h3>
+      <p id="answer"></p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("qa-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const question = document.getElementById("question").value;
+      const answerBox = document.getElementById("answer-box");
+      const spinner = document.getElementById("spinner");
+      const answerText = document.getElementById("answer");
+
+      answerBox.style.display = "none";
+      spinner.style.display = "block";
+      answerText.innerText = "";
+
+      try {
+        const response = await fetch("/ask", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ question })
+        });
+
+        const data = await response.json();
+        answerText.innerText = data.answer;
+        answerBox.style.display = "block";
+      } catch (error) {
+        answerText.innerText = "Oops! Something went wrong. Please try again.";
+        answerBox.style.display = "block";
+      } finally {
+        spinner.style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>
