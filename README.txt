@@ -17,7 +17,7 @@ Fictional Universe QA System (Harry Potter Lore)
 
 📁 Directory Structure:
 project-root/
-├── app.py                      # FastAPI backend
+├── main.py                      # FastAPI backend
 ├── context_retrieval.py        # TF-IDF based context retriever
 ├── templates/
 │   └── index.html              # Frontend HTML
@@ -53,7 +53,7 @@ project-root/
    - Save the model in `final_model/`
 
 5. Run the FastAPI server:
-   python app.py
+   python main.py
 
 6. Access the Web Interface:
    Open your browser and go to:
